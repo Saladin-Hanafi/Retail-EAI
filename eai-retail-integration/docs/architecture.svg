@@ -1,0 +1,78 @@
+<svg viewBox="0 0 980 620" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <style>
+    .sys{fill:#e8f0fe;stroke:#4285f4;stroke-width:2;rx:8}
+    .integ{fill:#fef7e0;stroke:#f9ab00;stroke-width:2}
+    .broker{fill:#e6f4ea;stroke:#34a853;stroke-width:2}
+    .db{fill:#fce8e6;stroke:#ea4335;stroke-width:1.5}
+    .lbl{font-size:13px;fill:#202124}
+    .ttl{font-size:14px;font-weight:bold;fill:#202124}
+    .eip{font-size:11px;fill:#b06000;font-style:italic}
+    .flow{stroke:#5f6368;stroke-width:2;fill:none;marker-end:url(#arr)}
+    .async{stroke:#34a853;stroke-width:2;fill:none;stroke-dasharray:6 4;marker-end:url(#arrg)}
+  </style>
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#5f6368"/></marker>
+    <marker id="arrg" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#34a853"/></marker>
+  </defs>
+
+  <text x="20" y="28" class="ttl" font-size="18">Retail Enterprise Application Integration — Architecture</text>
+
+  <!-- API Gateway -->
+  <rect x="40" y="70" width="160" height="60" rx="8" class="integ"/>
+  <text x="120" y="95" text-anchor="middle" class="ttl">API Gateway</text>
+  <text x="120" y="115" text-anchor="middle" class="eip">EIP: Message Router</text>
+
+  <!-- POS -->
+  <rect x="40" y="200" width="170" height="80" rx="8" class="sys"/>
+  <text x="125" y="228" text-anchor="middle" class="ttl">POS Service</text>
+  <text x="125" y="248" text-anchor="middle" class="lbl">JSON / REST</text>
+  <rect x="70" y="300" width="110" height="34" rx="6" class="db"/>
+  <text x="125" y="322" text-anchor="middle" class="lbl">pos.db</text>
+
+  <!-- Integration Engine -->
+  <rect x="320" y="180" width="220" height="130" rx="8" class="integ"/>
+  <text x="430" y="206" text-anchor="middle" class="ttl">Integration Engine</text>
+  <text x="430" y="228" text-anchor="middle" class="eip">Channel Adapter (HTTP→msg)</text>
+  <text x="430" y="246" text-anchor="middle" class="eip">Canonical Data Model</text>
+  <text x="430" y="264" text-anchor="middle" class="eip">Content-Based Router</text>
+  <text x="430" y="282" text-anchor="middle" class="eip">Message Translators</text>
+  <text x="430" y="300" text-anchor="middle" class="eip">Retry · Idempotency</text>
+
+  <!-- RabbitMQ -->
+  <rect x="320" y="370" width="220" height="90" rx="8" class="broker"/>
+  <text x="430" y="396" text-anchor="middle" class="ttl">RabbitMQ</text>
+  <text x="430" y="416" text-anchor="middle" class="eip">Pub-Sub (fanout) · Message Channel</text>
+  <text x="430" y="434" text-anchor="middle" class="lbl">inventory.sale · accounting.sale</text>
+  <text x="430" y="452" text-anchor="middle" class="eip">Dead-Letter Queue</text>
+
+  <!-- Inventory -->
+  <rect x="700" y="120" width="180" height="80" rx="8" class="sys"/>
+  <text x="790" y="148" text-anchor="middle" class="ttl">Inventory Service</text>
+  <text x="790" y="168" text-anchor="middle" class="lbl">XML</text>
+  <rect x="735" y="210" width="110" height="34" rx="6" class="db"/>
+  <text x="790" y="232" text-anchor="middle" class="lbl">inventory.db</text>
+
+  <!-- Accounting -->
+  <rect x="700" y="320" width="180" height="80" rx="8" class="sys"/>
+  <text x="790" y="348" text-anchor="middle" class="ttl">Accounting Service</text>
+  <text x="790" y="368" text-anchor="middle" class="lbl">JSON (ledger schema)</text>
+  <rect x="735" y="410" width="110" height="34" rx="6" class="db"/>
+  <text x="790" y="432" text-anchor="middle" class="lbl">accounting.db</text>
+
+  <!-- flows -->
+  <path class="flow" d="M125,130 L125,200"/>
+  <text x="135" y="170" class="lbl">sale (JSON)</text>
+  <path class="flow" d="M210,240 L320,240"/>
+  <text x="225" y="232" class="lbl">SaleCompleted</text>
+  <path class="async" d="M430,310 L430,370"/>
+  <text x="440" y="345" class="lbl">publish</text>
+  <path class="async" d="M540,400 C620,400 600,170 700,160"/>
+  <text x="560" y="250" class="lbl">XML deduct</text>
+  <path class="async" d="M540,420 C620,420 640,360 700,360"/>
+  <text x="560" y="400" class="lbl">ledger JSON</text>
+
+  <text x="40" y="520" class="eip">— solid: synchronous HTTP/REST   - - - green: asynchronous messaging</text>
+  <text x="40" y="545" class="lbl">Each system owns its DB; no cross-system DB access. The integration engine is the only caller of downstream APIs.</text>
+  <text x="40" y="570" class="lbl">EIPs implemented: Canonical Data Model · Content-Based Router · Message Translator · Channel Adapter ·</text>
+  <text x="40" y="590" class="lbl">Publish-Subscribe Channel · Message Channel · Dead-Letter Channel (+ retry &amp; idempotency for reliable messaging).</text>
+</svg>
